@@ -10,4 +10,6 @@ type Adapter interface {
 
 	GetUserByID(int64) *model.User
 	SaveUser(*model.User) error
+	UpdateUser(*model.User) error
+	DeleteUserByID(int64) error
 }

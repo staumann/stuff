@@ -24,6 +24,8 @@ func Start() {
 
 	// user handler
 	http.HandleFunc("/api/user/create", createUserHandler)
+	http.HandleFunc("/api/user/get", getUserHandler)
+	http.HandleFunc("/api/user/update", updateUserHandler)
 
 	log.Print(http.ListenAndServe(":8888", nil))
 }

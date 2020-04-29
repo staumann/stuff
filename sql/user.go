@@ -1,6 +1,8 @@
 package sql
 
 import (
+	"database/sql"
+	"errors"
 	"github.com/staumann/caluclation/model"
 	"log"
 )
@@ -31,4 +33,67 @@ func (a *Adapter) GetUserByID(id int64) *model.User {
 	}
 
 	return user
+}
+
+func (a *Adapter) UpdateUser(user *model.User) error {
+	tx, err := a.db.Begin()
+
+	if err != nil {
+		log.Printf("error beginning transaction: %s", err.Error())
+		return err
+	}
+	if result, e := tx.Exec(a.getScript("update/user"), user.Name, user.ID); e != nil {
+		return e
+	} else {
+		count, e := result.RowsAffected()
+		if e != nil {
+			log.Printf("error getting result: %s", e.Error())
+			return e
+		}
+		if count != 1 {
+			if er := tx.Rollback(); er != nil {
+				log.Printf("error roling back: %s", er.Error())
+				return er
+			}
+			return errors.New("error more than one row affected rolling back")
+		}
+		if er := tx.Commit(); er != nil {
+			log.Printf("error commiting transcation: %s", er.Error())
+		}
+	}
+	return nil
+}
+
+func (a *Adapter) DeleteUserByID(id int64) error {
+	tx, err := a.db.Begin()
+
+	if err != nil {
+		log.Printf("error beginning transaction: %s", err.Error())
+		return nil
+	}
+	var result sql.Result
+	result, err = tx.Exec(a.getScript("delete/user"), id)
+	if err != nil {
+		log.Printf("error executing query: %s", err.Error())
+		return err
+	}
+	var count int64
+	count, err = result.RowsAffected()
+	if err != nil {
+		log.Printf("error getting result: %s", err.Error())
+		return err
+	}
+	if count != 1 {
+		log.Printf("error more then 1 row affected")
+		if err = tx.Rollback(); err != nil {
+			log.Printf("error rolling back: %s", err.Error())
+		}
+		return errors.New("error more then 1 row affected")
+	} else {
+		if err = tx.Commit(); err != nil {
+			log.Printf("error comitting changes: %s", err.Error())
+			return err
+		}
+	}
+	return nil
 }

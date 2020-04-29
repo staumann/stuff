@@ -46,3 +46,20 @@ func getUserHandler(writer http.ResponseWriter, request *http.Request) {
 
 	_, _ = writer.Write(bts)
 }
+
+func updateUserHandler(writer http.ResponseWriter, request *http.Request) {
+	writer.Header().Set("Content-Type", contentTypeJson)
+	bts, _ := ioutil.ReadAll(request.Body)
+	user := new(model.User)
+
+	_ = json.Unmarshal(bts, user)
+
+	if e := adapter.UpdateUser(user); e != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		bts, _ = json.Marshal(model.ErrorResponse{Message: e.Error()})
+	} else {
+		writer.WriteHeader(http.StatusOK)
+		bts, _ = json.Marshal(*user)
+	}
+	_, _ = writer.Write(bts)
+}

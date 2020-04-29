@@ -8,8 +8,9 @@ type AdapterSpy struct {
 	updateHandler     func(*model.Bill) error
 	deleteHandlerById func(int64) error
 
-	getUserHandler  func(int64) *model.User
-	saveUserHandler func(*model.User) error
+	getUserHandler    func(int64) *model.User
+	saveUserHandler   func(*model.User) error
+	updateUserHandler func(*model.User) error
 }
 
 func (as *AdapterSpy) GetBillByID(id int64) *model.Bill {
@@ -50,6 +51,13 @@ func (as *AdapterSpy) DeleteBillByID(id int64) error {
 func (as *AdapterSpy) GetUserByID(id int64) *model.User {
 	if as.getUserHandler != nil {
 		return as.getUserHandler(id)
+	}
+	return nil
+}
+
+func (as *AdapterSpy) UpdateUser(user *model.User) error {
+	if as.updateUserHandler != nil {
+		return as.updateUserHandler(user)
 	}
 	return nil
 }

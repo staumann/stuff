@@ -1,1 +1,1 @@
-INSERT INTO users (id,name) VALUES (?,?);
+INSERT INTO users (name) VALUES (?);
