@@ -1,0 +1,1 @@
+INSERT INTO positions (amount, description, price, discount, bill, type) VALUES (?,?,?,?,?,?);

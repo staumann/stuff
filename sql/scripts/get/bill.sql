@@ -1,0 +1,1 @@
+Select * FROM bills WHERE id = ?;

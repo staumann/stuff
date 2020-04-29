@@ -1,0 +1,1 @@
+INSERT INTO bills (userId,shopId,discount,timeStamp) VALUES (?,?,?,?);

@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS shops
+(
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(100),
+    CONSTRAINT user_pkey PRIMARY KEY (id)
+);
