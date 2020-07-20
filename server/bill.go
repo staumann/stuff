@@ -20,7 +20,7 @@ func createBillHandler(writer http.ResponseWriter, r *http.Request) {
 		log.Printf("could not marshal bill from request: %s", err.Error())
 	}
 
-	if err = adapter.SaveBill(bill); err != nil {
+	if err = billRepository.SaveBill(bill); err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
 		bts, _ = json.Marshal(model.ErrorResponse{Message: err.Error()})
 	} else {
@@ -41,7 +41,7 @@ func getBillHandler(writer http.ResponseWriter, r *http.Request) {
 	} else {
 		id, _ := strconv.ParseInt(idString, 10, 64)
 
-		if obj := adapter.GetBillByID(id); obj != nil {
+		if obj := billRepository.GetBillByID(id); obj != nil {
 			writer.WriteHeader(http.StatusOK)
 			bts, _ = json.Marshal(*obj)
 		} else {
@@ -58,7 +58,7 @@ func updateBillHandler(writer http.ResponseWriter, r *http.Request) {
 	_ = json.Unmarshal(bts, bill)
 	writer.Header().Set("Content-Type", contentTypeJson)
 
-	err := adapter.UpdateBill(bill)
+	err := billRepository.UpdateBill(bill)
 
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
@@ -79,7 +79,7 @@ func deleteBillHandler(writer http.ResponseWriter, request *http.Request) {
 		bts, _ = json.Marshal(model.ErrorResponse{Message: "error no id given"})
 	} else {
 		id, _ := strconv.ParseInt(idString, 10, 64)
-		if err := adapter.DeleteBillByID(id); err != nil {
+		if err := billRepository.DeleteBillByID(id); err != nil {
 			writer.WriteHeader(http.StatusInternalServerError)
 			bts, _ = json.Marshal(model.ErrorResponse{Message: err.Error()})
 		} else {

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+    {{template "style"}}
+</head>
+<body>
+    {{template "navigation" "users"}}
+    <h2>New User</h2>
+    <div class="well">
+        Use this to create a new user. Each participant of this calculation tool needs a own user.
+        Currently it is not used for login or tracking.
+    </div>
+    <a class="btn btn-lg btn-primary" href="/users/new">
+        Create Users
+    </a>
+    <h2>Existing Users</h2>
+    <div class="well">
+        Here you find all existing users.
+    </div>
+</body>
+</html>

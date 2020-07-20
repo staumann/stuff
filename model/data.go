@@ -16,4 +16,5 @@ type Position struct {
 	SinglePrice float64 `json:"singlePrice"`
 	Discount    float64 `json:"discount"`
 	BillID      int64   `json:"billId"`
+	Type        string  `json:"type"`
 }

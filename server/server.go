@@ -2,19 +2,30 @@ package server
 
 import (
 	"github.com/staumann/caluclation/database"
+	"github.com/staumann/caluclation/server/ui"
 	"github.com/staumann/caluclation/sql"
 	"log"
 	"net/http"
 )
 
-var adapter database.Adapter
-
 const (
 	contentTypeJson = "application/json"
 )
 
+var (
+	billRepository database.BillRepository
+	userRepository database.UserRepository
+)
+
 func Start() {
-	adapter = sql.GetAdapter()
+	billRepository = sql.GetBillRepository()
+	userRepository = sql.GetUserRepository()
+
+	ui.ParseTemplates()
+
+	// ui
+	http.HandleFunc("/", ui.HomeHandler)
+	http.HandleFunc("/users", ui.UserHandler)
 
 	// bill handler
 	http.HandleFunc("/api/bill/create", createBillHandler)

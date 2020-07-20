@@ -22,15 +22,31 @@ const (
 	initDir   = "init"
 )
 
+var adapter *Adapter
+
 type Adapter struct {
 	scriptCache map[string]string
 	db          *sql.DB
 }
 
-func GetAdapter() database.Adapter {
-	ad := &Adapter{}
-	ad.init()
-	return ad
+func GetBillRepository() database.BillRepository {
+	return &billRepo{adapter: getAdapter()}
+}
+
+func GetUserRepository() database.UserRepository {
+	return &userRepo{adapter: getAdapter()}
+}
+
+func GetPositionRepository() database.PositionRepository {
+	return &positionRepo{adapter: getAdapter()}
+}
+
+func getAdapter() *Adapter {
+	if adapter == nil {
+		adapter = &Adapter{}
+		adapter.init()
+	}
+	return adapter
 }
 
 func (a *Adapter) init() {

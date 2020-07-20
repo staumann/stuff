@@ -7,9 +7,13 @@ import (
 	"time"
 )
 
-func (a *Adapter) GetBillByID(id int64) *model.Bill {
+type billRepo struct {
+	adapter *Adapter
+}
+
+func (a *billRepo) GetBillByID(id int64) *model.Bill {
 	obj := new(model.Bill)
-	err := a.db.QueryRow(a.getScript("get/bill"), id).Scan(&obj.ID, &obj.UserID, &obj.ShopID, &obj.TotalDiscount, &obj.Timestamp)
+	err := a.adapter.db.QueryRow(a.adapter.getScript("get/bill"), id).Scan(&obj.ID, &obj.UserID, &obj.ShopID, &obj.TotalDiscount, &obj.Timestamp)
 	if err != nil {
 		log.Printf("error getting bill: %s", err.Error())
 		return nil
@@ -17,8 +21,8 @@ func (a *Adapter) GetBillByID(id int64) *model.Bill {
 	return obj
 }
 
-func (a *Adapter) SaveBill(bill *model.Bill) error {
-	smt, err := a.db.Prepare(a.getScript("insert/bill"))
+func (a *billRepo) SaveBill(bill *model.Bill) error {
+	smt, err := a.adapter.db.Prepare(a.adapter.getScript("insert/bill"))
 	if err != nil {
 		log.Printf("error preparing statement: %s", err.Error())
 		return err
@@ -34,19 +38,19 @@ func (a *Adapter) SaveBill(bill *model.Bill) error {
 	return err
 }
 
-func (a *Adapter) UpdateBill(bill *model.Bill) error {
+func (a *billRepo) UpdateBill(bill *model.Bill) error {
 
-	_, err := a.db.Exec(a.getScript("update/bill"), bill.UserID, bill.ShopID, bill.TotalDiscount, bill.Timestamp, bill.ID)
+	_, err := a.adapter.db.Exec(a.adapter.getScript("update/bill"), bill.UserID, bill.ShopID, bill.TotalDiscount, bill.Timestamp, bill.ID)
 
 	return err
 }
 
-func (a *Adapter) DeleteBillByID(id int64) error {
-	tx, e := a.db.Begin()
+func (a *billRepo) DeleteBillByID(id int64) error {
+	tx, e := a.adapter.db.Begin()
 	if e != nil {
 		return e
 	}
-	result, err := tx.Exec(a.getScript("delete/bill"), id)
+	result, err := tx.Exec(a.adapter.getScript("delete/bill"), id)
 	if err != nil {
 		return err
 	}

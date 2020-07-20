@@ -15,7 +15,7 @@ func createUserHandler(writer http.ResponseWriter, request *http.Request) {
 	user := new(model.User)
 	_ = json.Unmarshal(bts, user)
 
-	if e := adapter.SaveUser(user); e != nil {
+	if e := userRepository.SaveUser(user); e != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
 		bts, _ = json.Marshal(model.ErrorResponse{Message: e.Error()})
 	} else {
@@ -35,7 +35,7 @@ func getUserHandler(writer http.ResponseWriter, request *http.Request) {
 		bts, _ = json.Marshal(model.ErrorResponse{Message: "error no id given"})
 	} else {
 		id, _ := strconv.ParseInt(idString, 10, 64)
-		if user := adapter.GetUserByID(id); user != nil {
+		if user := userRepository.GetUserByID(id); user != nil {
 			writer.WriteHeader(http.StatusOK)
 			bts, _ = json.Marshal(*user)
 		} else {
@@ -54,7 +54,7 @@ func updateUserHandler(writer http.ResponseWriter, request *http.Request) {
 
 	_ = json.Unmarshal(bts, user)
 
-	if e := adapter.UpdateUser(user); e != nil {
+	if e := userRepository.UpdateUser(user); e != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
 		bts, _ = json.Marshal(model.ErrorResponse{Message: e.Error()})
 	} else {
