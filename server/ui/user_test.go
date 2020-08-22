@@ -9,14 +9,15 @@ import (
 )
 
 type userMock struct {
-	getUserHandler func() []*model.User
+	getUserHandler  func() []*model.User
+	saveUserHandler func(*model.User) error
 }
 
-func (u *userMock) GetUserByID(int64) *model.User { return nil }
-func (u *userMock) GetUsers() []*model.User       { return u.getUserHandler() }
-func (u *userMock) SaveUser(*model.User) error    { return nil }
-func (u *userMock) UpdateUser(*model.User) error  { return nil }
-func (u *userMock) DeleteUserByID(int64) error    { return nil }
+func (u *userMock) GetUserByID(int64) *model.User   { return nil }
+func (u *userMock) GetUsers() []*model.User         { return u.getUserHandler() }
+func (u *userMock) SaveUser(user *model.User) error { return u.saveUserHandler(user) }
+func (u *userMock) UpdateUser(*model.User) error    { return nil }
+func (u *userMock) DeleteUserByID(int64) error      { return nil }
 
 var _ = Describe("user ui go", func() {
 	BeforeSuite(func() {
@@ -58,7 +59,31 @@ var _ = Describe("user ui go", func() {
 			Expect(recorder.Body.String()).To(ContainSubstring("<head data-test-id=\"user-overview\">"))
 			Expect(recorder.Body.String()).To(ContainSubstring("Griffin, Peter"))
 			Expect(recorder.Body.String()).To(ContainSubstring("Mercer, Ed"))
+		})
+		It("should save a passed user to the database", func() {
+			saveWasCalled := false
 
+			userRepository = &userMock{saveUserHandler: func(user *model.User) error {
+				Expect(user.LastName).To(Equal("Müller"))
+				Expect(user.FirstName).To(Equal("Frank"))
+				Expect(user.Image).To(Equal("https://pert.der/image.png"))
+				Expect(user.Password).To(Equal("secure112"))
+				saveWasCalled = true
+				return nil
+			}}
+
+			recorder := httptest.NewRecorder()
+			request := httptest.NewRequest(http.MethodPost, "/users/create", nil)
+			request.Form = make(map[string][]string)
+			request.Form.Set("lastName", "Müller")
+			request.Form.Set("firstName", "Frank")
+			request.Form.Set("image", "https://pert.der/image.png")
+			request.Form.Set("password", "secure112")
+
+			CreateUserHandler(recorder, request)
+
+			Expect(saveWasCalled).To(BeTrue())
+			Expect(recorder.Result().StatusCode).To(Equal(http.StatusMovedPermanently))
 		})
 	})
 })

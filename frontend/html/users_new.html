@@ -1,26 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head data-test="new-user-page">
-    <meta charset="UTF-8">
-    <title>New User</title>
-    {{template "style"}}
+    {{template "head"}}
 </head>
 <body>
 {{template "navigation" "users"}}
+{{if .Errors}}
+    {{template "error" .Errors }}
+{{end}}
 <form action="/users/create" method="POST">
     <div class="form-group">
         <label for="firstName">First name:</label>
-        <input type="text" name="firstName" class="form-control" id="firstName">
+        <input type="text" name="firstName" class="form-control" id="firstName" value="{{ .FirstName }}">
     </div>
     <div class="form-group">
         <label for="lastName">Last name:</label>
-        <input type="text" name="lastName" class="form-control" id="lastName">
+        <input type="text" name="lastName" class="form-control" id="lastName" value="{{ .LastName }}">
     </div>
     <div class="form-group">
         <label for="pwd">Password:</label>
-        <input type="password" name="password" class="form-control" id="pwd">
+        <input type="password" name="password" class="form-control" id="pwd" value="{{ .Password }}">
     </div>
-    <input type="submit" class="btn btn-default" />
+    <div class="form-group">
+        <label for="passwordRepeat">Password (repeat):</label>
+        <input type="password" name="passwordRepeat" class="form-control" id="passwordRepeat" value="{{ .PasswordRepeat }}">
+    </div>
+    <input type="submit" class="btn btn-default" value="Save" />
 </form>
 </body>
 </html>

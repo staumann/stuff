@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head data-test-id="user-overview">
-    <meta charset="UTF-8">
-    <title>Users</title>
-    {{template "style"}}
+    {{template "head"}}
 </head>
 <body>
     {{template "navigation" "users"}}
@@ -25,7 +23,7 @@
             </div>
             <ul class="list-group list-group-flush">
                 {{ range $u := .Users }}
-                    <li class="list-group-item"> {{ $u.LastName }}, {{ $u.FirstName }}</li>
+                    <li class="list-group-item">({{ $u.ID }}) {{ $u.LastName }}, {{ $u.FirstName }}</li>
                 {{end}}
             </ul>
         </div>

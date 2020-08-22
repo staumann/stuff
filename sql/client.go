@@ -41,6 +41,10 @@ func GetPositionRepository() database.PositionRepository {
 	return &positionRepo{adapter: getAdapter()}
 }
 
+func GetShopRepository() database.ShopRepository {
+	return &shopRepo{adapter: getAdapter()}
+}
+
 func getAdapter() *Adapter {
 	if adapter == nil {
 		adapter = &Adapter{}

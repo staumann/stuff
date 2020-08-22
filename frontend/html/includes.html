@@ -13,7 +13,17 @@
                 <li class="nav-item{{if eq . "bills"}} active{{end}}">
                     <a class="nav-link" href="/bills">Bills</a>
                 </li>
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown{{if eq . "shops"}} active{{end}}">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Shops
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/shops">Show</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/shops/new">New</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown{{if eq . "users"}} active{{end}}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Users
                     </a>
@@ -28,8 +38,9 @@
     </nav>
 {{end}}
 
-{{define "style"}}
-
+{{define "head"}}
+    <meta charset="UTF-8">
+    <title>Calculation</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
@@ -41,4 +52,12 @@
             padding: 1rem 5rem;
         }
     </style>
+{{end}}
+
+{{define "error"}}
+    {{range $error := . }}
+    <div class="alert alert-danger mb-1" role="alert">
+        {{ $error }}
+    </div>
+    {{end}}
 {{end}}

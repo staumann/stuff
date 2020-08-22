@@ -15,13 +15,15 @@ const (
 var (
 	billRepository database.BillRepository
 	userRepository database.UserRepository
+	shopRepository database.ShopRepository
 )
 
 func Start() {
 	billRepository = sql.GetBillRepository()
 	userRepository = sql.GetUserRepository()
+	shopRepository = sql.GetShopRepository()
 
-	ui.Prepare(billRepository, userRepository)
+	ui.Prepare(billRepository, userRepository, shopRepository)
 	ui.ParseTemplates("frontend/html")
 
 	// ui
@@ -29,6 +31,11 @@ func Start() {
 	http.HandleFunc("/users", ui.UserHandler)
 	http.HandleFunc("/users/new", ui.NewUserHandler)
 	http.HandleFunc("/users/create", ui.CreateUserHandler)
+
+	http.HandleFunc("/shops", ui.HandleShowShop)
+	http.HandleFunc("/shops/new", ui.HandleNewShop)
+	http.HandleFunc("/shops/create", ui.HandleCreateShop)
+
 	http.HandleFunc("/bills", ui.BillHandler)
 
 	// bill handler

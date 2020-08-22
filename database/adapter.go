@@ -25,3 +25,11 @@ type PositionRepository interface {
 
 	GetByBillID(int64) []*model.Position
 }
+
+type ShopRepository interface {
+	GetShopByID(int64) *model.Shop
+	GetShops(int64) []*model.Shop
+	SaveShop(*model.Shop) error
+	UpdateShop(*model.Shop) error
+	DeleteShopByID(int64) error
+}

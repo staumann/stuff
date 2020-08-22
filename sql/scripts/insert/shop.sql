@@ -1,0 +1,1 @@
+INSERT INTO shops (name, street, house_number, postal_code, city, infos) VALUES (?,?,?,?,?,?);

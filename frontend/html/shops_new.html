@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{template "head"}}
+</head>
+<body>
+    {{template "navigation" "shops"}}
+    {{ if .Errors }}
+        {{template "error" .Errors }}
+    {{end}}
+    <form action="/shops/create" method="POST">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" name="name" class="form-control" id="name" value="{{ .Name }}">
+        </div>
+        <div class="form-group">
+            <label for="street">Street:</label>
+            <input type="text" name="street" class="form-control" id="street" value="{{ .Street }}">
+        </div>
+        <div class="form-group">
+            <label for="houseNumber">Housenumber:</label>
+            <input type="text" name="houseNumber" class="form-control" id="houseNumber" value="{{ .HouseNumber }}">
+        </div>
+        <div class="form-group">
+            <label for="city">City:</label>
+            <input type="text" name="city" class="form-control" id="city" {{ .City }}>
+        </div>
+        <div class="form-group">
+            <label for="postalCode">PostalCode:</label>
+            <input type="password" name="postalCode" class="form-control" id="postalCode" {{ .PostalCode }}>
+        </div>
+        <div class="form-group">
+            <label for="infos">Infos:</label>
+            <textarea name="infos" class="form-control" id="infos" >{{ .Infos }}</textarea>
+        </div>
+        <input type="submit" class="btn btn-lg btn-small btn-primary" value="Save" />
+    </form>
+</body>
+</html>

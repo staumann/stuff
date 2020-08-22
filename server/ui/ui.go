@@ -13,12 +13,14 @@ import (
 var (
 	billRepository database.BillRepository
 	userRepository database.UserRepository
+	shopRepository database.ShopRepository
 	templates      *template.Template
 )
 
-func Prepare(b database.BillRepository, u database.UserRepository) {
+func Prepare(b database.BillRepository, u database.UserRepository, s database.ShopRepository) {
 	billRepository = b
 	userRepository = u
+	shopRepository = s
 }
 
 func ParseTemplates(path string) {
