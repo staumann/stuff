@@ -1,1 +1,1 @@
-SELECT * FROM users WHERE id = ?;
+SELECT last_name, first_name, image, password FROM users WHERE id = ?;

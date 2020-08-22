@@ -4,6 +4,7 @@ import "github.com/staumann/caluclation/model"
 
 type UserRepository interface {
 	GetUserByID(int64) *model.User
+	GetUsers() []*model.User
 	SaveUser(*model.User) error
 	UpdateUser(*model.User) error
 	DeleteUserByID(int64) error

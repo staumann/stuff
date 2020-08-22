@@ -2,6 +2,7 @@ package ui
 
 import (
 	"fmt"
+	"github.com/staumann/caluclation/database"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -9,21 +10,34 @@ import (
 	"strings"
 )
 
-var templates *template.Template
+var (
+	billRepository database.BillRepository
+	userRepository database.UserRepository
+	templates      *template.Template
+)
 
-func ParseTemplates() {
+func Prepare(b database.BillRepository, u database.UserRepository) {
+	billRepository = b
+	userRepository = u
+}
+
+func ParseTemplates(path string) {
 	var allFiles []string
-	files, err := ioutil.ReadDir("frontend/html")
+	files, err := ioutil.ReadDir(path)
 	if err != nil {
 		fmt.Println(err)
 	}
 	for _, file := range files {
 		filename := file.Name()
 		if strings.HasSuffix(filename, ".html") {
-			allFiles = append(allFiles, "frontend/html/"+filename)
+			log.Printf("Parsing Template: %s", filename)
+			allFiles = append(allFiles, fmt.Sprintf("%s/%s", path, filename))
 		}
 	}
 	templates, err = template.ParseFiles(allFiles...)
+	if err != nil {
+		log.Printf("error parsing templates: %v", err)
+	}
 }
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
@@ -32,10 +46,24 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(t, w, nil)
 }
 
-func UserHandler(w http.ResponseWriter, r *http.Request) {
-	t := templates.Lookup("users.html")
+func BillHandler(w http.ResponseWriter, r *http.Request) {
+	t := templates.Lookup("bills.html")
+	if t == nil {
+		log.Print("FUCK")
+	}
+	renderTemplate(t, w, make(map[string]interface{}))
+}
 
-	renderTemplate(t, w, nil)
+func handleError(w http.ResponseWriter, r *http.Request, err error) {
+	w.Header().Set("content-type", "text/html")
+	w.WriteHeader(http.StatusInternalServerError)
+	t := templates.Lookup("error.html")
+	if t != nil {
+		e := t.Execute(w, map[string]string{"error": err.Error()})
+		if e != nil {
+			log.Printf("error serving error page: %v", e)
+		}
+	}
 }
 
 func renderTemplate(t *template.Template, w http.ResponseWriter, data interface{}) {

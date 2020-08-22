@@ -1,4 +1,7 @@
 UPDATE users
 SET
-    name = ?
+    first_name = ?,
+    last_name = ?,
+    image = ?,
+    password = ?,
 WHERE id = ?;

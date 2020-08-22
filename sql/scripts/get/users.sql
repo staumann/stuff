@@ -1,1 +1,1 @@
-SELECT * FROM users WHERE id > ? LIMIT 100;
+SELECT last_name, first_name, image, password FROM users WHERE id > ? LIMIT 100;

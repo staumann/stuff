@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head data-test-id="user-overview">
     <meta charset="UTF-8">
     <title>Users</title>
     {{template "style"}}
@@ -8,16 +8,35 @@
 <body>
     {{template "navigation" "users"}}
     <h2>New User</h2>
-    <div class="well">
-        Use this to create a new user. Each participant of this calculation tool needs a own user.
-        Currently it is not used for login or tracking.
+    <div class="card mb-5">
+        <div class="card-body">
+            Use this to create a new user. Each participant of this calculation tool needs a own user.
+            Currently it is not used for login or tracking.
+        </div>
     </div>
-    <a class="btn btn-lg btn-primary" href="/users/new">
+    <a class="btn btn-lg btn-primary mb-5" href="/users/new">
         Create Users
     </a>
-    <h2>Existing Users</h2>
-    <div class="well">
-        Here you find all existing users.
-    </div>
+
+    {{ if .Users }}
+        <div class="card mb-5">
+            <div class="card-header">
+                Users
+            </div>
+            <ul class="list-group list-group-flush">
+                {{ range $u := .Users }}
+                    <li class="list-group-item"> {{ $u.LastName }}, {{ $u.FirstName }}</li>
+                {{end}}
+            </ul>
+        </div>
+    {{else}}
+        <div class="card mb-5 ">
+            <div class="card-header">No users found</div>
+            <div class="card-body">
+                <p class="card-text">Currently are no users available. Just click the link and create one</p>
+                <a href="/users/new" class="card-link">Create a user</a>
+            </div>
+        </div>
+    {{end}}
 </body>
 </html>

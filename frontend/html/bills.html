@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+    {{template "style"}}
+</head>
+<body>
+    {{template "navigation" "bills"}}
+    <h2>Available Bills</h2>
+    <div class="well">
+        Here you see all available bills.
+    </div>
+    <div class="form-container">
+        <form action="/bills" name="filter-form" method="get">
+            <input type="date" name="formDate" />
+            <input type="date" name="toDate"/>
+            <input type="submit" value="filter"/>
+        </form>
+    </div>
+    <div class="bills-container">
+        {{ range $bill := .Bills }}
+            <div class="bill">
+                <div class="shop">
+                    Store: {{ $bill.Shop }}
+                </div>
+                <div  class="payed-by">
+                    Payed by: {{ $bill.PayedBy }}
+                </div>
+                <div class="amount">
+                    Amount: {{ $bill.Amount }}
+                </div>
+                <div class="view-link">
+                    <a href="/bill?id={{ $bill.ID }}">
+                        View
+                    </a>
+                </div>
+            </div>
+        {{ end }}
+    </div>
+</body>
+</html>

@@ -21,11 +21,15 @@ func Start() {
 	billRepository = sql.GetBillRepository()
 	userRepository = sql.GetUserRepository()
 
-	ui.ParseTemplates()
+	ui.Prepare(billRepository, userRepository)
+	ui.ParseTemplates("frontend/html")
 
 	// ui
 	http.HandleFunc("/", ui.HomeHandler)
 	http.HandleFunc("/users", ui.UserHandler)
+	http.HandleFunc("/users/new", ui.NewUserHandler)
+	http.HandleFunc("/users/create", ui.CreateUserHandler)
+	http.HandleFunc("/bills", ui.BillHandler)
 
 	// bill handler
 	http.HandleFunc("/api/bill/create", createBillHandler)
@@ -38,5 +42,5 @@ func Start() {
 	http.HandleFunc("/api/user/get", getUserHandler)
 	http.HandleFunc("/api/user/update", updateUserHandler)
 
-	log.Print(http.ListenAndServe(":8888", nil))
+	log.Print(http.ListenAndServe(":8889", nil))
 }
